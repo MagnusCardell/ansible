@@ -1,8 +1,10 @@
 - name: Install ZSH
+  become: true
   apt: name=zsh
   tags: &tags_for_zsh_tasks [ 'install', 'productivity', 'dotfiles', 'zsh' ]
    
 - name: Find the path to zsh
+  become: true
   command: which zsh
   register: zsh_path
   changed_when: false
@@ -11,21 +13,21 @@
 - name: Change shell to zsh
   become: true
   user:
-    name: maca
+    name: "{{ ansible_user_id  }}"
     shell: "{{zsh_path.stdout}}" 
   tags: *tags_for_zsh_tasks
 
 - name: Check that the somefile.conf exists
   stat:
-    path: /home/maca/.oh-my-zsh
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
   register: oh_my_stats
   tags: *tags_for_zsh_tasks
 
-- name: Oh-My-Zsh
-  shell: curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh > ~/.oh-my-installer && chmod +x ~/.oh-my-installer && ~/.oh-my-installer
+- name: Oh-My-Zsh non-interactively
+  shell: curl -L https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ~/.oh-my-installer && chmod +x ~/.oh-my-installer && ~/.oh-my-installer
   tags: *tags_for_zsh_tasks
   when: oh_my_stats.stat.exists == False
-  become_user: maca 
+  become_user: "{{ ansible_user_id  }}"
 
 - name: Install zsh-autosuggestions
   ansible.builtin.git:
@@ -35,7 +37,7 @@
 
 - name: Add zsh-autosuggestions plugin to .zshrc
   lineinfile:
-    path: /home/maca/.zshrc
+    path: "{{ ansible_env.HOME }}/.zshrc"
     insertafter: '^plugins=\('
     line: 'plugins=(git zsh-autosuggestions)'
     backrefs: yes

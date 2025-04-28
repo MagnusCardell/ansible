@@ -18,7 +18,7 @@
     - include_tasks: tasks/git.yml
     - include_tasks: tasks/core.yml
     - include_tasks: tasks/node.yml
-    - include_tasks: tasks/npm-packages.yml
+    - include_tasks: tasks/npm.yml
     - include_tasks: tasks/zsh.yml
     - include_tasks: tasks/tools.yml
     - include_tasks: tasks/dotfiles.yml
