@@ -14,7 +14,7 @@
   become: true
   user:
     name: "{{ ansible_user_id  }}"
-    shell: "{{zsh_path.stdout}}" 
+    shell: /usr/bin/zsh 
   tags: *tags_for_zsh_tasks
 
 - name: Check that the somefile.conf exists
